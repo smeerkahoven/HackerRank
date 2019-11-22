@@ -65,8 +65,8 @@ public class MiniMaxSum {
 
         Arrays.sort(arr);
 
-        int maxSum = 0;
-        int minSum = 0;
+        long maxSum = 0;
+        long minSum = 0;
 
         minSum += arr[0] ;
         maxSum +=arr[arr.length-1];
