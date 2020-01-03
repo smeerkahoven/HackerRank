@@ -6,6 +6,8 @@
 package com.dev.hackerrank;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
 /**
@@ -13,22 +15,10 @@ import java.util.Scanner;
  * @author joselanza
  */
 public class Bitwise {
-    
-    class Node2 {
-
-    Node2 left, right;
-    int data;
-
-    Node2(int data) {
-        this.data = data;
-        left = right = null;
-    }
-}
 
     private static final Scanner scanner = new Scanner(System.in);
 
     class Value {
-
         int value;
         int count = 0;
     }
@@ -39,7 +29,7 @@ public class Bitwise {
 
         int vn[] = new int[t];
         int kn[] = new int[t];
-        int max[] = new int[t] ;
+        int max[] = new int[t];
 
         Bitwise w = new Bitwise();
 
@@ -51,81 +41,72 @@ public class Bitwise {
 
             vn[tItr] = n;
             kn[tItr] = k;
-            
-             max [tItr] = w.start(kn[tItr], vn[tItr]);
+
+            max[tItr] = w.start(kn[tItr], vn[tItr]);
         }
 
-        /*for (int i = 0; i < t; i++) {
-           
-        }*/
-        
         for (int i = 0; i < t; i++) {
             System.out.println(max[i]);
         }
-
         scanner.close();
     }
 
     public int start(int k, int n) {
 
-        ArrayList<Value> vector = new ArrayList();
+        Value[] vector = new Value[n];
 
         for (int i = 1; i < n; i++) {
             for (int j = i + 1; j <= n; j++) {
-                //System.out.println(String.format("%d,%d,%d", i, j, i&j));
                 if ((i & j) < k) {
-                    add(i & j, vector, k);
+                    vector = add(i & j, vector, k);
                 }
             }
         }
 
         Value max = null;
         for (Value v : vector) {
-            //System.out.println(String.format("%d,%d",v.value, v.count));
+            if (v != null) {
+                if (max == null) {
+
+                    if (v.value > 0) {
+                        max = v;
+                    }
+
+                } else {
+                    if (v.value > max.value && v.value < k) {
+                        max = v;
+                    }
+                }
+            }
+
             if (max == null) {
-                if (v.value > 0) {
-                    max = v;
-                }
-            } else {
-                if (v.value > max.value && v.value < k) {
-                    max = v;
-                }
-//                if (v.count >= max.count && v.value < k && v.value > max.value && max.value > 0) {
-//                    max = v;
-//                }
+                max = new Value();
+                max.value = 0;
             }
         }
 
-        if (max == null) {
-            max = new Value();
-            max.value = 0;
-        }
-        
-        return max.value ;
-
+        return max.value;
     }
 
-    private void add(int value, ArrayList<Value> vector, int k) {
+    private Value[] add(int value, Value[] vector, int k) {
 
         boolean found = false;
-//        if (value == 0)
-//            return ;
 
-        for (Value v : vector) {
-            if (v.value == value) {
-                found = true;
-                v.count = v.count + 1;
-                break;
-            }
+        if (value > k) {
+            return vector;
         }
 
-        if (!found && value < k) {
+        if (vector[value] == null) {
             Value v = new Value();
             v.value = value;
             v.count = 1;
-            vector.add(v);
+            vector[value] = v;
+        } else {
+            vector[value].count++;
         }
 
+        return vector;
+        
     }
 
 }
